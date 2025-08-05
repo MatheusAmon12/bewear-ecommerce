@@ -1,7 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,10 +24,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 import { SignInFormSchema, signInFormSchema } from "../types/schemas";
 
 const SignInForm = () => {
+  const router = useRouter();
   const form = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -33,8 +38,31 @@ const SignInForm = () => {
     },
   });
 
-  const handleSignInFormSubmit = (data: SignInFormSchema) => {
-    console.log(data);
+  const handleSignInFormSubmit = async (formValues: SignInFormSchema) => {
+    await authClient.signIn.email({
+      email: formValues.email,
+      password: formValues.password,
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+        onError: ({ error }) => {
+          if (error.code === "USER_NOT_FOUND") {
+            toast.error("E-mail não econtrado");
+            return form.setError("email", {
+              message: "E-mail não encontrado",
+            });
+          }
+          if (error.code === "INVALID_EMAIL_OR_PASSWORD") {
+            toast.error("E-mail ou senha inválidos");
+            return form.setError("email", {
+              message: "E-mail ou senha inválidos",
+            });
+          }
+          toast.error(error.message);
+        },
+      },
+    });
   };
 
   return (
@@ -81,7 +109,14 @@ const SignInForm = () => {
         </form>
       </Form>
       <CardFooter>
-        <Button form="sign-in-form" type="submit">
+        <Button
+          form="sign-in-form"
+          type="submit"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting && (
+            <Loader2 className="size-4 animate-spin" />
+          )}
           Entrar
         </Button>
       </CardFooter>
