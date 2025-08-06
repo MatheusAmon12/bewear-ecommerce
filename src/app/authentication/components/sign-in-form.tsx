@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 
 import { SignInFormSchema, signInFormSchema } from "../types/schemas";
+import GoogleIcon from "./google-icon";
 
 const SignInForm = () => {
   const router = useRouter();
@@ -62,6 +63,12 @@ const SignInForm = () => {
           toast.error(error.message);
         },
       },
+    });
+  };
+
+  const handleSignInWithGoogleButtonClick = async () => {
+    await authClient.signIn.social({
+      provider: "google",
     });
   };
 
@@ -112,16 +119,27 @@ const SignInForm = () => {
           </CardContent>
         </form>
       </Form>
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-2">
         <Button
           form="sign-in-form"
           type="submit"
           disabled={form.formState.isSubmitting}
+          className="w-full"
         >
           {form.formState.isSubmitting && (
             <Loader2 className="size-4 animate-spin" />
           )}
           Entrar
+        </Button>
+        <Button
+          variant="outline"
+          type="button"
+          disabled={form.formState.isSubmitting}
+          onClick={handleSignInWithGoogleButtonClick}
+          className="w-full"
+        >
+          <GoogleIcon />
+          Entrar com Google
         </Button>
       </CardFooter>
     </Card>

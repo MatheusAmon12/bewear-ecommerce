@@ -2,6 +2,7 @@ import { desc } from "drizzle-orm";
 import Image from "next/image";
 
 import CategorySelector from "@/components/common/category-selector";
+import Footer from "@/components/common/footer";
 import ProductList from "@/components/common/product-list";
 import { db } from "@/db";
 import { productTable } from "@/db/schema";
@@ -35,6 +36,8 @@ const Home = async () => {
         />
       </div>
 
+      {/*TODO: add brands cards */}
+
       <ProductList title="Mais vendidos" products={products} />
 
       <div className="px-5">
@@ -53,6 +56,8 @@ const Home = async () => {
       </div>
 
       <ProductList title="Produtos novos" products={newlyProducts} />
+
+      <Footer />
     </div>
   );
 };
