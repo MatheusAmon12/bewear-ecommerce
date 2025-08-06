@@ -1,6 +1,7 @@
 import { desc } from "drizzle-orm";
 import Image from "next/image";
 
+import BrandsList from "@/components/brands-list";
 import CategorySelector from "@/components/common/category-selector";
 import Footer from "@/components/common/footer";
 import ProductList from "@/components/common/product-list";
@@ -21,8 +22,6 @@ const Home = async () => {
   });
   const categories = await db.query.categoryTable.findMany({});
 
-  console.log(products[0].variants[0].imageUrl);
-
   return (
     <div className="space-y-6 py-6">
       <div className="px-5">
@@ -36,7 +35,7 @@ const Home = async () => {
         />
       </div>
 
-      {/*TODO: add brands cards */}
+      <BrandsList title="Marcas parceiras" />
 
       <ProductList title="Mais vendidos" products={products} />
 
