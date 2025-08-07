@@ -1,20 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { decreaseCartProductQuantity } from "@/actions/decrease-cart-product-quantity";
+import { increaseCartProductQuantity } from "@/actions/increase-cart-product-quantity";
 
-export const useDecreaseCartProductQuantity = (cartItemId: string) => {
+export const useIncreaseCartProductQuantity = (cartItemId: string) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["remove-product-from-cart", cartItemId],
-    mutationFn: () => decreaseCartProductQuantity({ cartItemId }),
+    mutationFn: () => increaseCartProductQuantity({ cartItemId }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["cart"] });
-      toast.success("Quantidade diminuída com sucesso");
+      toast.success("Quantidade aumentada com sucesso");
     },
     onError: () => {
-      toast.error("Erro ao diminuir quantidade");
+      toast.error("Erro incrementar quantidade");
     },
   });
 

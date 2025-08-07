@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { formatCentsToBRL } from "@/helpers/money";
 import { useDecreaseCartProductQuantity } from "@/hooks/data/use-decrease-cart-product-item";
+import { useIncreaseCartProductQuantity } from "@/hooks/data/use-increase-cart-product-quantity";
 import { useRemoveProductFromCart } from "@/hooks/data/use-remove-product-from-cart";
 
 import { Button } from "../ui/button";
@@ -27,6 +28,8 @@ const CartItem = ({
   const { mutate: removeProductFromCart } = useRemoveProductFromCart(id);
   const { mutate: decreaseCartProductQuantity } =
     useDecreaseCartProductQuantity(id);
+  const { mutate: increaseCartProductQuantity } =
+    useIncreaseCartProductQuantity(id);
 
   const handleRemoveProductFromCart = () => {
     removeProductFromCart();
@@ -34,6 +37,10 @@ const CartItem = ({
 
   const handleDecreaseButtonClick = () => {
     decreaseCartProductQuantity();
+  };
+
+  const handleIncreaseButtonClick = () => {
+    increaseCartProductQuantity();
   };
 
   return (
@@ -71,7 +78,11 @@ const CartItem = ({
               </Button>
             )}
             <p className="text-xs font-medium">{quantity}</p>
-            <Button className="size-4" variant="ghost" onClick={() => {}}>
+            <Button
+              className="size-4"
+              variant="ghost"
+              onClick={handleIncreaseButtonClick}
+            >
               <PlusIcon />
             </Button>
           </div>
