@@ -11,6 +11,7 @@ import { AddProductToCartSchema, addProductToCartSchema } from "./schema";
 
 export const addProductToCart = async (data: AddProductToCartSchema) => {
   addProductToCartSchema.parse(data);
+  console.log(data);
 
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -20,7 +21,7 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
     throw new Error("Unauthorized");
   }
 
-  const productVariant = await db.query.productTable.findFirst({
+  const productVariant = await db.query.productVariantTable.findFirst({
     where: eq(productVariantTable.id, data.productVariantId),
   });
 
