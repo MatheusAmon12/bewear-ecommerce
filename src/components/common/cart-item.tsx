@@ -2,10 +2,12 @@ import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 
 import { formatCentsToBRL } from "@/helpers/money";
+import { useRemoveProductFromCart } from "@/hooks/data/use-remove-product-from-cart";
 
 import { Button } from "../ui/button";
 
 interface CartItemProps {
+  id: string;
   productName: string;
   productVariantName: string;
   productVariantImageUrl: string;
@@ -14,12 +16,19 @@ interface CartItemProps {
 }
 
 const CartItem = ({
+  id,
   productName,
   productVariantImageUrl,
   productVariantPriceInCents,
   productVariantName,
   quantity,
 }: CartItemProps) => {
+  const { mutate } = useRemoveProductFromCart(id);
+
+  const handleRemoveProductFromCart = () => {
+    mutate();
+  };
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -37,7 +46,12 @@ const CartItem = ({
           </p>
           <div className="flex w-[100px] items-center justify-between rounded-lg border p-1 px-2">
             {quantity === 1 ? (
-              <Button className="size-4" variant="ghost" size="icon">
+              <Button
+                className="size-4"
+                variant="ghost"
+                size="icon"
+                onClick={handleRemoveProductFromCart}
+              >
                 <TrashIcon />
               </Button>
             ) : (

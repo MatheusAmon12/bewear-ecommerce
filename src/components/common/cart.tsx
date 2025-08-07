@@ -38,6 +38,7 @@ const Cart = () => {
                 {cart?.items.map((item) => (
                   <CartItem
                     key={item.id}
+                    id={item.id}
                     productName={item.productVariant.product.name}
                     productVariantImageUrl={item.productVariant.imageUrl}
                     productVariantName={item.productVariant.name}
