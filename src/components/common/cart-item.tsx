@@ -2,6 +2,7 @@ import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 
 import { formatCentsToBRL } from "@/helpers/money";
+import { useDecreaseCartProductQuantity } from "@/hooks/data/use-decrease-cart-product-item";
 import { useRemoveProductFromCart } from "@/hooks/data/use-remove-product-from-cart";
 
 import { Button } from "../ui/button";
@@ -23,10 +24,16 @@ const CartItem = ({
   productVariantName,
   quantity,
 }: CartItemProps) => {
-  const { mutate } = useRemoveProductFromCart(id);
+  const { mutate: removeProductFromCart } = useRemoveProductFromCart(id);
+  const { mutate: decreaseCartProductQuantity } =
+    useDecreaseCartProductQuantity(id);
 
   const handleRemoveProductFromCart = () => {
-    mutate();
+    removeProductFromCart();
+  };
+
+  const handleDecreaseButtonClick = () => {
+    decreaseCartProductQuantity();
   };
 
   return (
@@ -55,7 +62,11 @@ const CartItem = ({
                 <TrashIcon />
               </Button>
             ) : (
-              <Button className="size-4" variant="ghost" onClick={() => {}}>
+              <Button
+                className="size-4"
+                variant="ghost"
+                onClick={handleDecreaseButtonClick}
+              >
                 <MinusIcon />
               </Button>
             )}
