@@ -3,7 +3,7 @@
 import { ShoppingBagIcon } from "lucide-react";
 
 import { formatCentsToBRL } from "@/helpers/money";
-import { useGetCart } from "@/hooks/data/use-get-cart";
+import { useCart } from "@/hooks/data/use-cart";
 
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
@@ -18,7 +18,7 @@ import {
 import CartItem from "./cart-item";
 
 const Cart = () => {
-  const { data: cart } = useGetCart();
+  const { data: cart } = useCart();
 
   return (
     <Sheet>

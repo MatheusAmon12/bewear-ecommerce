@@ -8,12 +8,21 @@ interface UseProductAddToCartParams {
   quantity: number;
 }
 
-export const useProductAddToCart = (item: UseProductAddToCartParams) => {
+const getProductAddToCartKey = ({
+  productVariantId,
+  quantity,
+}: UseProductAddToCartParams) =>
+  ["add-product-to-cart", productVariantId, quantity] as const;
+
+export const useProductAddToCart = ({
+  productVariantId,
+  quantity,
+}: UseProductAddToCartParams) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationKey: ["add-product-to-cart", item.productVariantId, item.quantity],
-    mutationFn: () => addProductToCart(item),
+    mutationKey: getProductAddToCartKey({ productVariantId, quantity }),
+    mutationFn: () => addProductToCart({ productVariantId, quantity }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["cart"] });
     },

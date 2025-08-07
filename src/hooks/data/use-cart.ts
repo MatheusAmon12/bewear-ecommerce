@@ -2,9 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getCart } from "@/actions/get-cart";
 
-export const useGetCart = () => {
+export const getCartKey = () => ["cart"] as const;
+
+export const useCart = () => {
   const { data, isLoading, isPending } = useQuery({
-    queryKey: ["cart"],
+    queryKey: getCartKey(),
     queryFn: getCart,
   });
 
