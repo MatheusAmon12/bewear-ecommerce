@@ -3,6 +3,8 @@ import { toast } from "sonner";
 
 import { addProductToCart } from "@/actions/add-cart-product";
 
+import { getCartKey } from "./use-cart";
+
 interface UseProductAddToCartParams {
   productVariantId: string;
   quantity: number;
@@ -24,7 +26,7 @@ export const useProductAddToCart = ({
     mutationKey: getProductAddToCartKey({ productVariantId, quantity }),
     mutationFn: () => addProductToCart({ productVariantId, quantity }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["cart"] });
+      await queryClient.invalidateQueries({ queryKey: getCartKey() });
     },
     onError: () => {
       toast.error("Erro ao adicionar produto ao carrinho");

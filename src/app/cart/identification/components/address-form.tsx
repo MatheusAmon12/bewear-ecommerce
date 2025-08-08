@@ -14,10 +14,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAddShippingAddress } from "@/hooks/data/use-add-shipping-address";
 
 import { AddressFormSchema, addressFormSchema } from "../types/schemas";
 
 const AddressForm = () => {
+  const { mutate: addShippingAddress, isPending } = useAddShippingAddress();
+
   const form = useForm<AddressFormSchema>({
     resolver: zodResolver(addressFormSchema),
     defaultValues: {
@@ -35,8 +38,9 @@ const AddressForm = () => {
     },
   });
 
-  const handleAddressFormSubmit = async (formValues: AddressFormSchema) => {
-    console.log(formValues);
+  const handleAddressFormSubmit = (formValues: AddressFormSchema) => {
+    addShippingAddress(formValues);
+    form.reset();
   };
   return (
     <Form {...form}>
@@ -184,7 +188,7 @@ const AddressForm = () => {
             )}
           />
         </div>
-        
+
         <div className="grid grid-cols-3 gap-3">
           <FormField
             control={form.control}
@@ -227,8 +231,13 @@ const AddressForm = () => {
           />
         </div>
 
-        <Button size="lg" type="submit" className="mt-4 w-full rounded-full">
-          Continuar com o pagamento
+        <Button
+          size="lg"
+          type="submit"
+          className="mt-4 w-full rounded-full"
+          disabled={isPending}
+        >
+          {isPending ? "Salvando..." : "Continuar com o pagamento"}
         </Button>
       </form>
     </Form>
