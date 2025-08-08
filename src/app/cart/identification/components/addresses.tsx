@@ -1,25 +1,46 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
+import { getCart } from "@/actions/get-cart";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { shippingAddressTable } from "@/db/schema";
+import { useCartShippingAddressUpdate } from "@/hooks/data/use-cart-shipping-address-update";
 import { useShippingAddresses } from "@/hooks/data/use-shipping-addresses";
 
 import AddressForm from "./address-form";
 
 interface ShippingAddressesProps {
   initialShippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
+  initialCart: Awaited<ReturnType<typeof getCart>>;
 }
 
-const Addresses = ({ initialShippingAddresses }: ShippingAddressesProps) => {
-  const [selectedAddress, setSelectedAddress] = useState<string | null>();
+const Addresses = ({
+  initialShippingAddresses,
+  initialCart,
+}: ShippingAddressesProps) => {
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(
+    initialCart?.shippingAddress?.id || null,
+  );
   const { data: shippingAddresses, isPending } = useShippingAddresses({
     initialData: initialShippingAddresses,
   });
+  const { mutate } = useCartShippingAddressUpdate();
+
+  const handlePaymentButtonClick = () => {
+    if (!selectedAddress) {
+      return;
+    }
+
+    mutate({
+      shippingAddressId: selectedAddress,
+    });
+  };
 
   return (
     <Card>
@@ -67,9 +88,19 @@ const Addresses = ({ initialShippingAddresses }: ShippingAddressesProps) => {
         {selectedAddress === "add_new" && (
           <Card className="mt-4">
             <CardContent>
-              <AddressForm />
+              <AddressForm onShippingAddressCreate={setSelectedAddress} />
             </CardContent>
           </Card>
+        )}
+        {selectedAddress && selectedAddress !== "add_new" && (
+          <Button
+            size="lg"
+            className="mt-8 w-full rounded-full"
+            onClick={handlePaymentButtonClick}
+            asChild
+          >
+            <Link href="#">Continuar com o pagamento</Link>
+          </Button>
         )}
       </CardContent>
     </Card>

@@ -25,7 +25,7 @@ const getAddShippingAddressKey = (data: UseAddShippingAddressParams) =>
 export const useAddShippingAddress = () => {
   const queryClient = useQueryClient();
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, mutateAsync, isPending } = useMutation({
     mutationKey: getAddShippingAddressKey({} as UseAddShippingAddressParams),
     mutationFn: (data: UseAddShippingAddressParams) => addShippingAddress(data),
     onSuccess: async () => {
@@ -41,6 +41,7 @@ export const useAddShippingAddress = () => {
 
   return {
     mutate,
+    mutateAsync,
     isPending,
   };
 };

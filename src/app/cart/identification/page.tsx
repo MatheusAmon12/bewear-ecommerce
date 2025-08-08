@@ -20,10 +20,18 @@ const IdentificationPage = async () => {
   const cart = await db.query.cartTable.findFirst({
     where: eq(cartTable.userId, session.user.id),
     with: {
-      items: true,
+      shippingAddress: true,
+      items: {
+        with: {
+          productVariant: {
+            with: {
+              product: true,
+            },
+          },
+        },
+      },
     },
   });
-
   if (!cart || cart?.items.length === 0) {
     redirect("/");
   }
@@ -34,7 +42,10 @@ const IdentificationPage = async () => {
 
   return (
     <div className="px-5">
-      <Addresses initialShippingAddresses={shippingAddresses} />
+      <Addresses
+        initialShippingAddresses={shippingAddresses}
+        initialCart={{ ...cart, totalPriceInCents: 0 }}
+      />
     </div>
   );
 };

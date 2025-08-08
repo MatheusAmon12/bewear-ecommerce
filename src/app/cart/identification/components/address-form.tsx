@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,11 +16,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAddShippingAddress } from "@/hooks/data/use-add-shipping-address";
+import { useCartShippingAddressUpdate } from "@/hooks/data/use-cart-shipping-address-update";
 
 import { AddressFormSchema, addressFormSchema } from "../types/schemas";
 
-const AddressForm = () => {
-  const { mutate: addShippingAddress, isPending } = useAddShippingAddress();
+interface AddressFormProps {
+  onShippingAddressCreate: (shipppingAddressId: string) => void;
+}
+
+const AddressForm = ({ onShippingAddressCreate }: AddressFormProps) => {
+  const { mutateAsync: addShippingAddress, isPending } =
+    useAddShippingAddress();
+  const { mutateAsync: updateCartShippingAddress } =
+    useCartShippingAddressUpdate();
 
   const form = useForm<AddressFormSchema>({
     resolver: zodResolver(addressFormSchema),
@@ -38,9 +47,23 @@ const AddressForm = () => {
     },
   });
 
-  const handleAddressFormSubmit = (formValues: AddressFormSchema) => {
-    addShippingAddress(formValues);
-    form.reset();
+  const handleAddressFormSubmit = async (formValues: AddressFormSchema) => {
+    try {
+      const newAddress = await addShippingAddress(formValues);
+
+      if (!newAddress.id) {
+        toast.error("New address can't be created");
+        return;
+      }
+
+      form.reset();
+      onShippingAddressCreate(newAddress.id)
+
+      await updateCartShippingAddress({ shippingAddressId: newAddress.id });
+    } catch (error) {
+      console.log(error);
+      toast.error("Error on update shipping address");
+    }
   };
   return (
     <Form {...form}>
@@ -237,7 +260,7 @@ const AddressForm = () => {
           className="mt-4 w-full rounded-full"
           disabled={isPending}
         >
-          {isPending ? "Salvando..." : "Continuar com o pagamento"}
+          {isPending ? "Salvando..." : "Adicionar endereço"}
         </Button>
       </form>
     </Form>
