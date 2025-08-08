@@ -3,6 +3,8 @@ import { toast } from "sonner";
 
 import { addShippingAddress } from "@/actions/add-shipping-address";
 
+import { getShippingAddressesKey } from "./use-shipping-addresses";
+
 interface UseAddShippingAddressParams {
   email: string;
   fullName: string;
@@ -27,7 +29,9 @@ export const useAddShippingAddress = () => {
     mutationKey: getAddShippingAddressKey({} as UseAddShippingAddressParams),
     mutationFn: (data: UseAddShippingAddressParams) => addShippingAddress(data),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["shipping-addresses"] });
+      await queryClient.invalidateQueries({
+        queryKey: getShippingAddressesKey(),
+      });
       toast.success("Endereço salvo com sucesso!");
     },
     onError: () => {
