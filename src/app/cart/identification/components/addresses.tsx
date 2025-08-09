@@ -1,10 +1,11 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { getCart } from "@/actions/get-cart";
+import { formatAddress } from "@/app/cart/helpers/address";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -24,6 +25,7 @@ const Addresses = ({
   initialShippingAddresses,
   initialCart,
 }: ShippingAddressesProps) => {
+  const router = useRouter();
   const [selectedAddress, setSelectedAddress] = useState<string | null>(
     initialCart?.shippingAddress?.id || null,
   );
@@ -33,13 +35,15 @@ const Addresses = ({
   const { mutate } = useCartShippingAddressUpdate();
 
   const handlePaymentButtonClick = () => {
-    if (!selectedAddress) {
+    if (!selectedAddress || selectedAddress === "add_new") {
       return;
     }
 
     mutate({
       shippingAddressId: selectedAddress,
     });
+
+    router.push("/cart/confirmation");
   };
 
   return (
@@ -67,10 +71,8 @@ const Addresses = ({
                     value={shippingAddress.id}
                     id={shippingAddress.id}
                   />
-                  <Label htmlFor={shippingAddress.id}>
-                    {shippingAddress.street}, {shippingAddress.number},{" "}
-                    {shippingAddress.neighborhood}, {shippingAddress.city} -{" "}
-                    {shippingAddress.zipCode}
+                  <Label htmlFor={shippingAddress.id} className="line-clamp-2">
+                    {formatAddress(shippingAddress)}
                   </Label>
                 </div>
               </CardContent>
@@ -98,9 +100,8 @@ const Addresses = ({
             size="lg"
             className="mt-8 w-full rounded-full"
             onClick={handlePaymentButtonClick}
-            asChild
           >
-            <Link href="#">Continuar com o pagamento</Link>
+            Continuar com o pagamento
           </Button>
         )}
       </CardContent>
