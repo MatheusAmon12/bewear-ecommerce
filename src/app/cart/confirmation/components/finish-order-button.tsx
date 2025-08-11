@@ -1,10 +1,12 @@
 "use client";
 
+import { loadStripe } from "@stripe/stripe-js";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import { createCheckoutSession } from "@/actions/create-checkout-session";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,14 +20,29 @@ import { useFinishOrder } from "@/hooks/data/use-finish-order";
 
 const FinishOrderButton = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const { mutate, isPending } = useFinishOrder();
+  const { mutateAsync, isPending } = useFinishOrder();
 
-  const handleFinishOrderButtonClick = () => {
-    mutate(undefined, {
-      onSuccess: () => {
-        setIsDialogOpen(true);
-      },
+  const handleFinishOrderButtonClick = async () => {
+    if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+      throw new Error("Stipe publishable key not found");
+    }
+    const { orderId } = await mutateAsync();
+
+    const checkoutSession = await createCheckoutSession({ orderId });
+
+    const stripe = await loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    );
+
+    if (!stripe) {
+      throw new Error("Stripe load failed");
+    }
+
+    await stripe.redirectToCheckout({
+      sessionId: checkoutSession.id,
     });
+
+    setIsDialogOpen(true);
   };
 
   return (
@@ -61,7 +78,12 @@ const FinishOrderButton = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button size="lg" variant="outline" className="rounded-full" asChild>
+            <Button
+              size="lg"
+              variant="outline"
+              className="rounded-full"
+              asChild
+            >
               <Link href="/">Página inicial</Link>
             </Button>
             <Button size="lg" className="rounded-full">

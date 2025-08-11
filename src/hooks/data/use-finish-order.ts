@@ -17,11 +17,9 @@ export const useFinishOrder = () => {
       await queryClient.invalidateQueries({
         queryKey: getCartKey(),
       });
-
-      toast.success("Compra finalizada com sucesso");
     },
     onError: () => {
-      toast.error("Erro a finalizar compra");
+      toast.error("Erro a processar compra");
     },
   });
 
