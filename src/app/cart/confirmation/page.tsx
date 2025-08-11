@@ -10,11 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { db } from "@/db";
 import { cartTable, shippingAddressTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-import CartSummary from "../components/cart-summary";
+import CartFinancialSummary from "../components/cart-financial-summary";
+import CartItemsSummary from "../components/cart-items-summary";
 import { formatAddress } from "../helpers/address";
 import FinishOrderButton from "./components/finish-order-button";
 
@@ -95,11 +97,21 @@ const ConfirmationPage = async () => {
             <FinishOrderButton />
           </CardFooter>
         </Card>
-        <CartSummary
-          products={products}
-          subTotalInCents={cartTotalPriceInCents}
-          totalInCents={cartTotalPriceInCents}
-        />
+
+        <div className="px-5">
+          <div className="space-y-3">
+            <CartFinancialSummary
+              subTotalInCents={cartTotalPriceInCents}
+              totalInCents={cartTotalPriceInCents}
+            />
+          </div>
+
+          <div className="my-10">
+            <Separator />
+          </div>
+
+          <CartItemsSummary products={products} />
+        </div>
       </div>
 
       <Footer />
