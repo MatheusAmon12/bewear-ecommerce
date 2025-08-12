@@ -11,14 +11,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const CheckoutSuccessPage = () => {
+const CheckoutCancelPage = () => {
   return (
     <Dialog open>
       <DialogContent className="gap-8">
         <div className="relative h-[233.29px] w-full">
           <Image
-            src="/illustration.svg"
-            alt="Pedido efetuado"
+            src="/payment-error.svg"
+            alt="Pedido cancelado"
             width={0}
             height={0}
             fill
@@ -27,11 +27,11 @@ const CheckoutSuccessPage = () => {
         </div>
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
-            Pedido Efetuado!
+            Pedido Cancelado!
           </DialogTitle>
           <DialogDescription>
-            Seu pedido foi efetuado com sucesso. Você pode acompanhar o status
-            na seção de “Meus Pedidos”.
+            Seu pedido foi cancelado. Você pode acompanhar o status na seção de
+            “Meus Pedidos”.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -47,4 +47,4 @@ const CheckoutSuccessPage = () => {
   );
 };
 
-export default CheckoutSuccessPage;
+export default CheckoutCancelPage;
