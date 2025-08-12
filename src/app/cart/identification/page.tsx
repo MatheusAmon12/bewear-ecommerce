@@ -65,22 +65,21 @@ const IdentificationPage = async () => {
           initialShippingAddresses={shippingAddresses}
           initialCart={{ ...cart, totalPriceInCents: 0 }}
         />
-
       </div>
-        <div className="px-5">
-          <div className="space-y-3">
-            <CartFinancialSummary
-              subTotalInCents={cartTotalPriceInCents}
-              totalInCents={cartTotalPriceInCents}
-            />
-          </div>
-
-          <div className="my-10">
-            <Separator />
-          </div>
-
-          <CartItemsSummary products={products} />
+      <div className="px-5">
+        <div className="space-y-3">
+          <CartFinancialSummary
+            subTotalInCents={cartTotalPriceInCents}
+            totalInCents={cartTotalPriceInCents}
+          />
         </div>
+
+        <div className="my-10">
+          <Separator />
+        </div>
+
+        <CartItemsSummary products={products} />
+      </div>
 
       <Footer />
     </div>

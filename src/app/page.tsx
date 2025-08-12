@@ -23,7 +23,7 @@ const Home = async () => {
   const categories = await db.query.categoryTable.findMany({});
 
   return (
-    <div className="space-y-6 py-6">
+    <div className="space-y-6 pt-6">
       <div className="px-5">
         <Image
           src="/banner-01.png"

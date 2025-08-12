@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
+import Footer from "@/components/common/footer";
 import ProductItem from "@/components/common/product-item";
 import { db } from "@/db";
 import { categoryTable, productTable } from "@/db/schema";
@@ -27,16 +28,21 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
   });
 
   return (
-    <>
-      <div className="space-y-6 px-5">
+    <div className="flex flex-col gap-12">
+      <div className="h-full flex-1 space-y-6 px-5">
         <h2 className="text-xl font-semibold">{category.name}</h2>
         <div className="grid grid-cols-2 gap-4">
           {products.map((product) => (
-            <ProductItem key={product.id} product={product} textContainerClassName="w-full" />
+            <ProductItem
+              key={product.id}
+              product={product}
+              textContainerClassName="w-full"
+            />
           ))}
         </div>
       </div>
-    </>
+      <Footer />
+    </div>
   );
 };
 
