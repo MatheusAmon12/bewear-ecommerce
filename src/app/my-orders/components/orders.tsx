@@ -58,8 +58,8 @@ const Orders = ({ orders }: OrdersProps) => {
   };
 
   return (
-    <div className="space-y-12">
-      <div className="space-y-3 px-5">
+    <div className="flex h-svh flex-col">
+      <div className="flex-1 space-y-3 px-5">
         {orders?.map((order) => (
           <Card key={order.id}>
             <CardContent>

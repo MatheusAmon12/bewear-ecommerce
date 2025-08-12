@@ -41,8 +41,8 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
   });
 
   return (
-    <>
-      <div className="flex flex-col space-y-6 px-5">
+    <div className="flex h-svh flex-col">
+      <div className="flex flex-1 flex-col space-y-6 px-5">
         <div className="relative h-[380px] w-full rounded-3xl">
           <Image
             src={productVariant.imageUrl}
@@ -81,10 +81,9 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
           title="Você também pode gostar"
           products={likelyProducts}
         />
-
-        <Footer />
       </div>
-    </>
+      <Footer />
+    </div>
   );
 };
 

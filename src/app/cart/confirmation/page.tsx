@@ -78,7 +78,7 @@ const ConfirmationPage = async () => {
   }));
 
   return (
-    <div className="space-y-12">
+    <div className="flex h-svh flex-col gap-12">
       <div className="space-y-4 px-5">
         <Card>
           <CardHeader>
