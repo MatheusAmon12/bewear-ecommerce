@@ -39,5 +39,22 @@ export const POST = async (request: Request) => {
       })
       .where(eq(orderTable.id, orderId));
   }
+
+  if (event.type === "checkout.session.expired") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const orderId = session.metadata?.orderId;
+
+    if (!orderId) {
+      return NextResponse.error();
+    }
+
+    await db
+      .update(orderTable)
+      .set({
+        status: "canceled",
+      })
+      .where(eq(orderTable.id, orderId));
+  }
+
   return NextResponse.json({ received: true });
 };
